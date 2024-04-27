@@ -49,7 +49,7 @@ function VolunteerForm() {
         }
         setLoading(true);
         try {
-            let data = await fetch('http://127.0.0.1:3001/volunteer-form', { method: "POST",headers:{"Content-Type": "application/json"}, body: JSON.stringify({ name, email , contact , age , gender ,address }) })
+            await fetch('http://127.0.0.1:3001/volunteer-form', { method: "POST",headers:{"Content-Type": "application/json"}, body: JSON.stringify({ name, email , contact , age , gender ,address }) })
             // console.log(data); 
             setTimeout(() => {
                 setLoading(false);
@@ -67,8 +67,9 @@ function VolunteerForm() {
     return (
         <>
             <Header />
-            <div className="VolunteerForm center padding">
-            <form onSubmit={handleSubmit}>
+            <div className="volunteer">
+            <div className="VolunteerForm">
+            <form className='form-volunteer' onSubmit={handleSubmit}>
             <h2>Volunteer Form</h2>
                 <Form.Floating>
                     <Form.Control 
@@ -138,8 +139,8 @@ function VolunteerForm() {
                 </Button>
                 </form>
             </div>
-           
-            <hr />
+            </div>
+            
             <Footer />
         </>
     );
