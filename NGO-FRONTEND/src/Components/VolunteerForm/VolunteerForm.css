@@ -1,15 +1,30 @@
-body{
-    background-image: linear-gradient(-225deg, #7085B6 0%, #87A7D9 50%, #DEF3F8 100%);
+
+
+.form-volunteer{
+    width: 35rem;
+    height: 33rem;
+    padding: 1rem;
+}
+.volunteer{
+    display: flex;
+    justify-content: end;
+    background-image: url("/public/images/Volunteer.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 .VolunteerForm{
-    border: 2px solid black;
-    border-radius: 8px;
-    margin-left: 30%;
-    margin-right: 30%;
-    margin-top: 1rem;   
-    margin-bottom: 1rem;   
-
+    width: 40rem;
+    padding: 1rem;
+    margin: 2rem;
+    z-index: 1;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;  
+   
 }
 
 
@@ -18,13 +33,12 @@ body{
     text-shadow: 2px 2px 4px #000000;
     margin-bottom: 2rem;
     text-align: center;
-    margin-top: -2rem;
+    margin-top: -1rem;
  
 }
 
 .VolunteerForm .btn{
-    margin: 1rem 30%;
-    margin-bottom: -2rem;
+    margin:1rem 30%;
     color: black;
     font-weight: 600;
 }
