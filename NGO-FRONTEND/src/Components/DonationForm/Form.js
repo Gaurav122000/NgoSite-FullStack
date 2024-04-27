@@ -131,7 +131,7 @@ const DonationForm = () => {
   return (
     <>
     <Header />
-      <div className="VolunteerForm center padding">
+      <div className="center padding">
         <form id="donationForm" onSubmit={handleSubmit}>
           <h2>Donation Form</h2>
           <Form.Floating>

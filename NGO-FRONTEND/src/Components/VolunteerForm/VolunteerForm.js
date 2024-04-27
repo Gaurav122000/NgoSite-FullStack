@@ -67,7 +67,7 @@ function VolunteerForm() {
     return (
         <>
             <Header />
-            <div className="VolunteerForm center padding">
+            <div className="center padding">
             <form onSubmit={handleSubmit}>
             <h2>Volunteer Form</h2>
                 <Form.Floating>
