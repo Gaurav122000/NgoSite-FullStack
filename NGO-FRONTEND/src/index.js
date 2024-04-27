@@ -8,7 +8,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "./index.css";
 import Home from "./Components/Home/Home"
 import ErrorPage from "./error-page";
-import Form from "./Components/DonationForm/Form";
 // import App from "./App";
 import About from "./Components/About/About";
 import Contact from "./Components/Contact/Contact";
@@ -20,6 +19,7 @@ import Blog from "./Components/Blog/Blog";
 import Services from "./Components/Services/Services";
 import Gallery from "./Components/Gallery/Gallery";
 import VolunteerForm from "./Components/VolunteerForm/VolunteerForm"
+import DonationForm from "./Components/DonationForm/Form";
 
 
 const router = createBrowserRouter([
@@ -29,8 +29,8 @@ const router = createBrowserRouter([
     errorElement:<ErrorPage />
   },
   {
-    path:"/Form",
-    element:<Form />
+    path:"/DonationForm",
+    element:<DonationForm />
   },
   {
     path:"/About",
