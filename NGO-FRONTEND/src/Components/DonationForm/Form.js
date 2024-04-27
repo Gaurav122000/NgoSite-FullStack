@@ -1,13 +1,16 @@
 import React, { useState } from 'react'
-// import axios from 'axios';
-//import { useNavigate } from 'react-router';
-import Footer from '../Footer/Footer';
+import Form from 'react-bootstrap/Form';
 import Header from '../Header/Header';
+import Footer from '../Footer/Footer';
+import FloatingLabel from 'react-bootstrap/esm/FloatingLabel';
 import './Form.css'
+import Button from 'react-bootstrap/Button';
+import { useNavigate } from 'react-router-dom';
+import FormFloating from 'react-bootstrap/esm/FormFloating';
 
 
-const Form = () => {
-
+const DonationForm = () => {
+  // useStates for getting the data 
   const [name, setName] = useState()
   const [email, setEmail] = useState()
   const [phone, setPhone] = useState()
@@ -16,18 +19,43 @@ const Form = () => {
   const [amount, setAmount] = useState()
   const [choice, setUserChoice] = useState()
   const [pickup, setPickupChoice] = useState()
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  //const navigate = useNavigate();
-  // const navigateToPage = useNavigate();
+  //validator
+  const validateEmail = (email) => {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  }
 
-  const handleSubmit = async () => {
-    // eventValue.preventDefault();
-    // axios.post('http://localhost:3001/donation-form', { name, email, phone, address, donation, amount, choice, pickup })
-    //   .then(result => console.log(result))
-    //   .catch(err => console.log(err))
+  const validatePhoneNumber = (number) => {
+    var re = /^\d{10}$/;
+    return re.test(number);
+  }
+
+  //handle submit controlling the submition
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    // checking the validation
+    if (!validateEmail(email)) {
+      alert("Invalid email format");
+      return;
+    }
+    if (!validatePhoneNumber(phone)) {
+      alert("Invalid phone number format");
+      return;
+    }
+
+  // sending data
+    setLoading(true);
     try {
       let data = await fetch('http://127.0.0.1:3001/donation-form', { method: "POST",headers:{"Content-Type": "application/json"}, body: JSON.stringify({ name, email, phone, address, donation, amount, choice, pickup }) })
-      console.log(data); 
+      // console.log(data); 
+      setTimeout(()=>{
+        setLoading(false);
+        alert("Form submitted successfully!");
+        navigate('/');
+      },3000);
     }
     catch(error) {
       console.log(error);
@@ -103,39 +131,85 @@ const Form = () => {
   return (
     <>
     <Header />
-      <div className="container">
-        <h2>Donation Form</h2>
+      <div className="VolunteerForm center padding">
         <form id="donationForm" onSubmit={handleSubmit}>
-          <label htmlFor="Name"> Full Name:</label>
-          <input type="text" id="name" name="name" onChange={(e) => setName(e.target.value)} required />
-          {/* <label htmlFor="lastName">Last Name:</label>
-          <input type="text" id="name" name="lastName" onChange={(e) => setLastName(e.target.value)} required /> */}
+          <h2>Donation Form</h2>
+          <Form.Floating>
+            <Form.Control 
+              id="name"
+              type="text"
+              placeholder="Full Name"
+              size='lg'
+              name='name'
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+            <label htmlFor="name">Full Name</label>
+          </Form.Floating>
+          <Form.Floating>
+                    <Form.Control
+                        id="email"
+                        type="email"
+                        placeholder="name@example.com"
+                        size='lg'
+                        name='email'
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <label htmlFor="email">Email address</label>
+          </Form.Floating>
+          <Form.Floating>
+                    <Form.Control
+                        id="phone"
+                        type="number"
+                        placeholder="Contacts"
+                        size='lg'
+                        name='phone'
+                        onChange={(e) => setPhone(e.target.value)}  
+                        required
+                    />
+                    <label htmlFor="contact">Mobile Number</label>
+          </Form.Floating>
+          <Form.Floating>
+                    <Form.Control
+                        id="address"
+                        type="text"
+                        placeholder="Address"
+                        size='lg'
+                        name='address'
+                        onChange={(e) => setAddress(e.target.value)}
+                        required
+                    />
+                    <label htmlFor="address">Address</label>
+          </Form.Floating>
 
-          <label htmlFor="email">Email:</label>
-          <input type="email" id="email" name="email" onChange={(e) => setEmail(e.target.value)} />
-
-          <label htmlFor="phone">Phone:</label>
-          <input type="number" id="phone" name="phone" onChange={(e) => setPhone(e.target.value)} required />
-
-          <label htmlFor="address">Address:</label>
-          <input type="text" id="address" name="address" onChange={(e) => setAddress(e.target.value)} required />
-
-          <label htmlFor="items">Select the donation:</label>
-          <select name="donation" id="donation" onChange={handleOnchange}  >
-            <option value="Select">Select the Donation</option>
-            <option value="books">Books</option>
-            <option value="clothes">Clothes</option>
-            <option value="money">Money</option>
-            <option value="shoes">Shoes</option>
-          </select>
+          <FloatingLabel controlId="floatingSelect" label="Select the donation">
+            <Form.Select onChange={handleOnchange} name='donation' id='donation' aria-label="Gender">
+              <option value="Select">Select</option>
+              <option value="books">Books</option>
+              <option value="clothes">Clothes</option>
+              <option value="money">Money</option>
+              <option value="shoes">Shoes</option>
+            </Form.Select>
+          </FloatingLabel>
           <br />
 
           {
             showhide === "money" && (
               <div className="amount">
-                <label htmlFor="Amount">Amount:</label>
-                <input type="number" id='amount' name='amount' placeholder='Amount Should be greater Then 250' onChange={minAmnt} />
-                <button type="submit" id="submitButton" onClick={(event) => handleMinAmount(event)}>Proceed to Payment</button>
+                <Form.Floating>
+                    <Form.Control
+                        id="amount"
+                        type="number"
+                        placeholder="Amount Should be greater Then 250"
+                        size='lg'
+                        name='amount'
+                        onChange={minAmnt}
+                    />
+                    <label htmlFor="Amount">Amount</label>
+                </Form.Floating>
+                <Button className='btn' id="submitButton" type='submit' size='lg' variant="success" disabled={loading} onClick={(event) => handleMinAmount(event)}>
+                    {loading ? "Payment Gateway..." : "Proceed to Payment"}
+                </Button>
               </div>
             )
           }
@@ -144,16 +218,31 @@ const Form = () => {
             (showhide === "books" || showhide === "clothes" || showhide === "shoes") &&
             (
               <>
-                <label htmlFor="choice">Make a choice:</label><br /><br />
-                <input type="radio" name="choice" value="pickup" onChange={handleChoice}/>Pickup &nbsp; &nbsp; &nbsp; 
-                <input type="radio" name="choice" value="courier" onChange={handleChoice} />Courier <br />
+                <FloatingLabel controlId="floatingSelect" label="Choose a Service">
+                  <Form.Select onChange={handleChoice} name='choice' id='donation' aria-label="service">
+                    <option value="Select">Select</option>
+                    <option value="pickup">Pickup</option>
+                    <option value="courier">Courier</option>
+                  </Form.Select>
+                </FloatingLabel>
+              
                 {
                     choice==="pickup" && (
                       <>
-                        <label htmlFor="qunatity">Quantity:</label><br />
-                        <input type="number" name='pickup' id="pickup" placeholder='Number should be more then 15' onChange={minQuantity} />
-                        <button type="submit" id="submitButton" onClick={handleQuantity}>Proceed to Next Page</button>
-                        
+                        <Form.Floating>
+                          <Form.Control
+                            id="pickup"
+                            type="number"
+                            placeholder='Number should be more then 15'
+                            size='lg'
+                            name='pickup'
+                            onChange={minQuantity}
+                          />
+                            <label htmlFor="quantity">Quantity</label>
+                        </Form.Floating>
+                        <Button className='btn' id="submitButton" type='submit' size='lg' variant="success" disabled={loading} onClick={handleQuantity}>
+                            {loading ? "Submiting..." : "Proceed to Next Page"}
+                        </Button>
                       </>
                     )
                 }
@@ -161,7 +250,9 @@ const Form = () => {
                 {
                     choice==="courier" && (
                       <>
-                        <button type="submit" id="submitButton">Proceed to Next Page</button>
+                      <Button className='btn' id="submitButton" type='submit' size='lg' variant="success" disabled={loading}>
+                            {loading ? "Submiting..." : "Proceed to Next Page"}
+                      </Button>
                       </>
                     )
                 }
@@ -179,4 +270,4 @@ const Form = () => {
   )
 }
 
-export default Form
+export default DonationForm

@@ -1,34 +1,69 @@
+import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import FloatingLabel from 'react-bootstrap/esm/FloatingLabel';
 import "./VolunteerForm.css"
 import Button from 'react-bootstrap/Button';
-import { useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 
 function VolunteerForm() {
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        try {
-            let data = await fetch('http://127.0.0.1:3001/volunteer-form', { method: "POST",headers:{"Content-Type": "application/json"}, body: JSON.stringify({ name, email , contact , age , gender ,address }) })
-            // console.log(data); 
-          }
-          catch(error) {
-            console.log(error);
-          } 
-        }
-
     const [name, setName] = useState()
     const [email, setEmail] = useState()
     const [contact, setContact] = useState()
     const [age, setAge] = useState()
     const [gender, setGender] = useState()
     const [address, setAddress] = useState()
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
-    
-   
+    // validator
+    const validateEmail = (email) => {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    }
+
+    const validatePhoneNumber = (number) => {
+        var re = /^\d{10}$/;
+        return re.test(number);
+    }
+
+    const validateAge = (age) => {
+        return age >= 18 && age <= 80;
+    }
+
+    //handle submit controlling the submition
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        if (!validateEmail(email)) {
+            alert("Invalid email format");
+            return;
+        }
+        if (!validatePhoneNumber(contact)) {
+            alert("Invalid phone number format");
+            return;
+        }
+        if (!validateAge(age)) {
+            alert("Invalid age. Age should be between 18 and 100");
+            return;
+        }
+        setLoading(true);
+        try {
+            let data = await fetch('http://127.0.0.1:3001/volunteer-form', { method: "POST",headers:{"Content-Type": "application/json"}, body: JSON.stringify({ name, email , contact , age , gender ,address }) })
+            // console.log(data); 
+            setTimeout(() => {
+                setLoading(false);
+                alert("Form submitted successfully!");
+                navigate('/'); // Redirect to home page
+            }, 3000);
+        }
+        catch(error) {
+            console.log(error);
+            setLoading(false);
+        } 
+    }
+
+
     return (
         <>
             <Header />
@@ -38,7 +73,7 @@ function VolunteerForm() {
                 <Form.Floating>
                     <Form.Control 
                         id="name"
-                        type="name"
+                        type="text"
                         placeholder="Full Name"
                         size='lg'
                         name='name' 
@@ -98,7 +133,9 @@ function VolunteerForm() {
                     />
                     <label htmlFor="address">Address</label>
                 </Form.Floating>
-                <Button className='btn' type='submit' size='lg' variant="success">Be a Volunteer</Button>
+                <Button className='btn' type='submit' size='lg' variant="success" disabled={loading}>
+                    {loading ? "Submitting..." : "Be a Volunteer"}
+                </Button>
                 </form>
             </div>
            

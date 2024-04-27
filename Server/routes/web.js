@@ -1,4 +1,5 @@
-const sendMail = require('../controllers/emailcon.controller');
+const sendMail = require('../controllers/emailcon.donate');
+const sendMail2 = require('../controllers/emailcon.volunteer');
 const DonateModel = require('../models/donate.model');
 const VolunteerModel = require('../models/volunteer.model');
 const ContactUsModel = require('../models/contact.model');
@@ -22,8 +23,8 @@ function initRoutes(app){
         //console.log(volunteerData);
         VolunteerModel.create(volunteerData)
         .then(
-            volunteer => res.json(volunteer)
-            
+            volunteer => res.json(volunteer),
+            sendMail2(volunteerData)
         )
         .catch(err => res.json(err))
     })
