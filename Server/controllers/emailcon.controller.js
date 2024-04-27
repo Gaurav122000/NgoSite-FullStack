@@ -1,5 +1,6 @@
 // import nodemailer from "nodemailer";
 const nodemailer = require("nodemailer");
+require("dotenv").config();
 
 //2. Configure email and send it.
 async function sendMail({name, email, donation, amount, choice, pickup}){
@@ -8,8 +9,8 @@ async function sendMail({name, email, donation, amount, choice, pickup}){
     const transporter = nodemailer.createTransport({
         service: "gmail",
         auth:{
-            user: "gs8375881403@gmail.com",
-            pass: "ktycicalqumqdsqu",
+            user: process.env.e_id,
+            pass: process.env.e_pass,
         },
     });
 

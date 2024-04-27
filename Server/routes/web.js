@@ -2,6 +2,7 @@ const sendMail = require('../controllers/emailcon.controller');
 const DonateModel = require('../models/donate.model');
 const VolunteerModel = require('../models/volunteer.model');
 const ContactUsModel = require('../models/contact.model');
+const Blog = require('../models/blog.model');
 
 function initRoutes(app){
     app.post('/donation-form', (req, res) => {
@@ -20,7 +21,10 @@ function initRoutes(app){
         const volunteerData = req.body; 
         //console.log(volunteerData);
         VolunteerModel.create(volunteerData)
-        .then(volunteer => res.json(volunteer))
+        .then(
+            volunteer => res.json(volunteer)
+            
+        )
         .catch(err => res.json(err))
     })
     
@@ -31,6 +35,16 @@ function initRoutes(app){
         .then(contact => res.json(contact))
         .catch(err => res.json(err))
     
+    })
+
+    app.get('/blog', async (req,res)=>{
+        const blogs = await Blog.find({});
+        res.json(blogs);
+    })
+
+    app.get('/donate-data', async (req,res) => {
+        const donate = await DonateModel.find({});
+        res.json(donate);
     })
 }
 
