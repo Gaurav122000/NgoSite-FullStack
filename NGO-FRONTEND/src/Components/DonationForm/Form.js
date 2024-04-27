@@ -6,7 +6,6 @@ import FloatingLabel from 'react-bootstrap/esm/FloatingLabel';
 import './Form.css'
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
-import FormFloating from 'react-bootstrap/esm/FormFloating';
 
 
 const DonationForm = () => {
@@ -49,7 +48,7 @@ const DonationForm = () => {
   // sending data
     setLoading(true);
     try {
-      let data = await fetch('http://127.0.0.1:3001/donation-form', { method: "POST",headers:{"Content-Type": "application/json"}, body: JSON.stringify({ name, email, phone, address, donation, amount, choice, pickup }) })
+      await fetch('http://127.0.0.1:3001/donation-form', { method: "POST",headers:{"Content-Type": "application/json"}, body: JSON.stringify({ name, email, phone, address, donation, amount, choice, pickup }) })
       // console.log(data); 
       setTimeout(()=>{
         setLoading(false);
@@ -131,7 +130,8 @@ const DonationForm = () => {
   return (
     <>
     <Header />
-      <div className="VolunteerForm center padding">
+    <div className="donation">
+      <div className="form-donation">
         <form id="donationForm" onSubmit={handleSubmit}>
           <h2>Donation Form</h2>
           <Form.Floating>
@@ -190,9 +190,7 @@ const DonationForm = () => {
               <option value="money">Money</option>
               <option value="shoes">Shoes</option>
             </Form.Select>
-          </FloatingLabel>
-          <br />
-
+          </FloatingLabel>   
           {
             showhide === "money" && (
               <div className="amount">
@@ -208,7 +206,7 @@ const DonationForm = () => {
                     <label htmlFor="Amount">Amount</label>
                 </Form.Floating>
                 <Button className='btn' id="submitButton" type='submit' size='lg' variant="success" disabled={loading} onClick={(event) => handleMinAmount(event)}>
-                    {loading ? "Payment Gateway..." : "Proceed to Payment"}
+                    {loading ? "Payment Gateway..." : "Make Payment"}
                 </Button>
               </div>
             )
@@ -241,7 +239,7 @@ const DonationForm = () => {
                             <label htmlFor="quantity">Quantity</label>
                         </Form.Floating>
                         <Button className='btn' id="submitButton" type='submit' size='lg' variant="success" disabled={loading} onClick={handleQuantity}>
-                            {loading ? "Submiting..." : "Proceed to Next Page"}
+                            {loading ? "Submiting..." : "Next Page"}
                         </Button>
                       </>
                     )
@@ -251,7 +249,7 @@ const DonationForm = () => {
                     choice==="courier" && (
                       <>
                       <Button className='btn' id="submitButton" type='submit' size='lg' variant="success" disabled={loading}>
-                            {loading ? "Submiting..." : "Proceed to Next Page"}
+                            {loading ? "Submiting..." : "Next Page"}
                       </Button>
                       </>
                     )
@@ -263,7 +261,7 @@ const DonationForm = () => {
 
           {/* <button type="submit" id="submitButton" onClick={(event) => handleMinAmount(event)}>Proceed to Next Page</button> */}
         </form>
-
+      </div>
       </div>
           <Footer />
     </>
